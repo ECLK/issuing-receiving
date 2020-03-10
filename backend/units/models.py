@@ -24,16 +24,25 @@ class PollingDistricts(models.Model):
     name = models.CharField(max_length=100)
     polling_division = models.ForeignKey(
         'PollingDivisions', on_delete=models.SET_NULL)
-    i_r_aro = models.ForeignKey(STAFF_MODEL, on_delete=models.SET_NULL)
 
 
 class PollingStations(models.Model):
     name = models.CharField(max_length=255)
     number = models.IntegerField(unique=True)
     spo = models.ForeignKey(STAFF_MODEL, on_delete=models.SET_NULL)
+    election = models.ForeignKey("election.Election", on_delete=models.CASCADE)
+    id = models.AutoField()
+
+    class Meta:
+        unique_together = (("election", "id"))
 
 
 class CountingCentre(models.Model):
     name = models.CharField(max_field=255)
     number = models.IntegerField(unique=True)
     cco = models.ForeignKey(STAFF_MODEL, on_delete=models.SET_NULL)
+    election = models.ForeignKey("election.Election", on_delete=models.CASCADE)
+    id = models.AutoField()
+
+    class Meta:
+        unique_together = (("election", "id"))
