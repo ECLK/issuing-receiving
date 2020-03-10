@@ -8,3 +8,7 @@ class ReportedToWork(models.Model):
     reported_time_on_election_day = models.TimeField()
     election = models.ForeignKey(
         "election.Election", on_delete=models.SET_NULL)
+    staff = models.ForeignKey("staffs.Staffs", on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = (("election, staff"))
