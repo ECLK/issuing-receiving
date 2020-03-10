@@ -8,6 +8,7 @@ class IssuedToSPO(models.Model):
     no_of_stamps = models.IntegerField()
     no_of_pens = models.IntegerField()
     spo = models.ForeignKey("staffs.Staffs", on_delete=models.SET_NULL)
+    i_r_aro = models.ForeignKey("staffs.Staffs", on_delete=models.SET_NULL)
     election = models.ForeignKey(
         "election.Election", on_delete=models.SET_NULL)
     entered_time = models.DateTimeField()
@@ -27,6 +28,7 @@ class ReceivedFromSPO(models.Model):
     no_of_stamps = models.IntegerField()
     no_of_pens = models.IntegerField()
     spo = models.ForeignKey("staffs.Staffs", on_delete=models.SET_NULL)
+    i_r_aro = models.ForeignKey("staffs.Staffs", on_delete=models.SET_NULL)
     election = models.ForeignKey(
         "election.Election", on_delete=models.SET_NULL)
     entered_time = models.DateTimeField()
