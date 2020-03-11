@@ -18,9 +18,18 @@ class IssuedToSPO(models.Model):
         unique_together = (("entered_time", "id"))
 
 
-class BallotBoxesIssued(models.Model):
+class BallotBoxesIssuedToSPO(models.Model):
     serial_number = models.CharField()
-    issued_to_spo = models.ForeignKey("IssuedToSPO", on_delete=models.CASCADE)
+    spo = models.ForeignKey("staffs.Staffs", on_delete=models.SET_NULL)
+    i_r_aro = models.ForeignKey("staffs.Staffs", on_delete=models.SET_NULL)
+    election = models.ForeignKey(
+        "election.Election", on_delete=models.SET_NULL)
+    entered_time = models.DateTimeField()
+    issued_time = models.DateTimeField()
+    id = models.AutoField()
+
+    class Meta:
+        unique_together = (("entered_time", "id"))
 
 
 class ReceivedFromSPO(models.Model):
@@ -40,5 +49,13 @@ class ReceivedFromSPO(models.Model):
 
 class BallotBoxesReceived(models.Model):
     serial_number = models.CharField()
-    received_from_spo = models.ForeignKey(
-        "ReceivedFromSPO", on_delete=models.CASCADE)
+    spo = models.ForeignKey("staffs.Staffs", on_delete=models.SET_NULL)
+    i_r_aro = models.ForeignKey("staffs.Staffs", on_delete=models.SET_NULL)
+    election = models.ForeignKey(
+        "election.Election", on_delete=models.SET_NULL)
+    entered_time = models.DateTimeField()
+    issued_time = models.DateTimeField()
+    id = models.AutoField()
+
+    class Meta:
+        unique_together = (("entered_time", "id"))
