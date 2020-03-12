@@ -11,7 +11,7 @@ export const ProtectedRoute = (props: ProtectedRoutePropsInterface): React.React
 	const { path, component, exact } = props;
 	const { authState } = useContext(AuthContext);
 
-	if (authState) {
+	if (authState.authenticated) {
 		return <Route path={path} component={component} exact={exact} />;
 	} else {
 		return <Redirect to="/login" />;
