@@ -1,7 +1,6 @@
-import React, { useState, useContext, useEffect, useReducer } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Grid, Paper, TextField, Button, Typography, Snackbar } from "@material-ui/core";
 import useStyles from "../../theme";
-import { SIGN_IN } from "../../shared/constants";
 import { AuthContext } from "../../helpers";
 import MuiAlert from "@material-ui/lab/Alert";
 import { useHistory } from "react-router-dom";
@@ -25,9 +24,9 @@ export const SignIn = (): React.ReactElement => {
 
 	useEffect(() => {
 		if (authState.authenticated) {
-			history.push("/dashboard");
+			history?.push("/dashboard");
 		}
-	}, [authState.authenticated]);
+	}, [authState.authenticated, history]);
 
 	return (
 		<>
