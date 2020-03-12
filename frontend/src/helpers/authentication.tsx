@@ -1,20 +1,8 @@
-import React, { useEffect, ReducerAction, useReducer } from "react";
+import React, { useEffect, useReducer } from "react";
 import { AuthContext } from "./auth-context";
-
-const SIGN_IN = "sign_in";
-const SIGN_OUT = "sign_out";
-
-interface AuthState {
-	authenticated: boolean;
-	accessToken: string | null;
-}
-
-interface AuthAction {
-	type: "sign_in" | "sign_out";
-	payload: string | null;
-}
-
-export const initialState: AuthState = { authenticated: false, accessToken: null };
+import { AuthState, AuthAction } from "../shared/models";
+import { SIGN_IN, SIGN_OUT } from "../shared/constants";
+import { getAccessToken } from "../utils";
 
 const reducer = (state: AuthState, action: AuthAction): AuthState => {
 	switch (action.type) {
@@ -26,18 +14,16 @@ const reducer = (state: AuthState, action: AuthAction): AuthState => {
 			return { ...state };
 	}
 };
-export interface AuthContextInterface {
-	authState: AuthState;
-	dispatch: React.Dispatch<AuthAction>;
-}
+
+const initialState: AuthState = { authenticated: false, accessToken: null };
 export const Authentication = (props: React.PropsWithChildren<any>): React.ReactElement => {
 	const [authState, dispatch] = useReducer(reducer, initialState);
 	const { children } = props;
 
 	useEffect(() => {
 		// Check if access token is there in the local storage
-		if (true) {
-			dispatch({ type: SIGN_IN, payload: "access_token_mock" });
+		if (getAccessToken()) {
+			dispatch({ type: SIGN_IN, payload: getAccessToken() });
 		}
 	}, []);
 
