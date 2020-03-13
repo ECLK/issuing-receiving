@@ -4,21 +4,39 @@ import { Authentication } from "./helpers/authentication";
 import { routes } from "./configs";
 import { ProtectedRoute } from "./helpers";
 import { RouteInterface } from "./shared/models/routes";
+import { HOME } from "./shared/constants";
+import { AppLayout } from "./layout";
 
 export const App = (): React.ReactElement => {
 	return (
 		<BrowserRouter>
 			<Authentication>
-				<Switch>
-					<Redirect exact={true} path="/" to="/dashboard" />
-					{routes?.map((route: RouteInterface) => {
-						if (route.protected) {
-							return <ProtectedRoute path={route.path} exact={route.exact} component={route.component} />;
-						} else {
-							return <Route path={route.path} exact={route.exact} component={route.component} />;
-						}
-					})}
-				</Switch>
+				<AppLayout>
+					<Switch>
+						<Redirect exact={true} path="/" to={HOME} />
+						{routes?.map((route: RouteInterface, index: number) => {
+							if (route.protected) {
+								return (
+									<ProtectedRoute
+										key={index}
+										path={route.path}
+										exact={route.exact}
+										component={route.component}
+									/>
+								);
+							} else {
+								return (
+									<Route
+										key={index}
+										path={route.path}
+										exact={route.exact}
+										component={route.component}
+									/>
+								);
+							}
+						})}
+					</Switch>
+				</AppLayout>
 			</Authentication>
 		</BrowserRouter>
 	);
