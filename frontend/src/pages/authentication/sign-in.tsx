@@ -5,6 +5,7 @@ import { AuthContext } from "../../helpers";
 import MuiAlert from "@material-ui/lab/Alert";
 import { useHistory } from "react-router-dom";
 import { signIn } from "../../utils";
+import { HOME } from "../../shared/constants";
 
 export const SignIn = (): React.ReactElement => {
 	const classes = useStyles();
@@ -24,7 +25,7 @@ export const SignIn = (): React.ReactElement => {
 
 	useEffect(() => {
 		if (authState.authenticated) {
-			history?.push("/dashboard");
+			history?.push(HOME);
 		}
 	}, [authState.authenticated, history]);
 
