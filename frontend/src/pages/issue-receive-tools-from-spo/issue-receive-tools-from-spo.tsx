@@ -1,5 +1,5 @@
 import React from "react";
 
 export const IssueReceiveToolsFromSPO = (): React.ReactElement => {
-	return <></>;
+	return <div>Issue and Receive!</div>;
 };

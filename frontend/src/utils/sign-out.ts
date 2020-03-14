@@ -1,5 +1,5 @@
-import { AuthAction } from "../shared/models";
-import { SIGN_OUT, ACCESS_TOKEN } from "../shared/constants";
+import { AuthAction } from "../models";
+import { SIGN_OUT, ACCESS_TOKEN } from "../constants";
 
 export const signOut = (dispatch: React.Dispatch<AuthAction>) => {
 	localStorage.removeItem(ACCESS_TOKEN);
