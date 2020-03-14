@@ -5,5 +5,6 @@ export interface RouteInterface {
 	protected: boolean;
 	showOnMenu: boolean;
 	name: string;
-	icon?: React.ReactNode;
+	icon?: React.ReactElement | null | undefined;
+	appLayout: boolean;
 }

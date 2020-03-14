@@ -1,7 +1,7 @@
 import React, { useEffect, useReducer } from "react";
 import { AuthContext } from "./auth-context";
-import { AuthState, AuthAction } from "../shared/models";
-import { SIGN_IN, SIGN_OUT } from "../shared/constants";
+import { AuthState, AuthAction } from "../models";
+import { SIGN_IN, SIGN_OUT } from "../constants";
 import { getAccessToken } from "../utils";
 
 const reducer = (state: AuthState, action: AuthAction): AuthState => {

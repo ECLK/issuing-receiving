@@ -9,34 +9,48 @@ import {
 	List,
 	ListItem,
 	ListItemIcon,
-	ListItemText
+	ListItemText,
+	Paper
 } from "@material-ui/core";
-import { Mail } from "@material-ui/icons";
 import useStyles from "../theme";
+import { routes } from "../configs";
+import { RouteInterface } from "../models/routes";
+import { useHistory } from "react-router-dom";
 
 export const AppLayout = (props: React.PropsWithChildren<any>): React.ReactElement => {
 	const classes = useStyles();
+	const history = useHistory();
 
 	return (
 		<>
 			<AppBar position="static" className={classes.appBar}>
 				<Toolbar>
-					<IconButton edge="start" color="inherit" aria-label="menu"></IconButton>
-					<Typography variant="h6">Issuing and Receiving App</Typography>
+					<Typography variant="h6" className={classes.appBarTitle}>
+						Issuing and Receiving
+					</Typography>
 					<Button color="inherit">Login</Button>
 				</Toolbar>
 			</AppBar>
-			<Drawer variant="permanent" classes={{ paper: classes.drawer }}>
+			<Drawer variant="permanent" className={classes.drawer} classes={{ paper: classes.drawerPaper }}>
 				<List>
-					<ListItem>
-						<ListItemIcon>
-							<Mail />
-						</ListItemIcon>
-						<ListItemText primary="Sample" />
-					</ListItem>
+					{routes.map((route: RouteInterface, index: number) => {
+						return route.showOnMenu ? (
+							<ListItem
+								key={index}
+								onClick={() => {
+									history.push(route.path);
+								}}
+							>
+								{route.icon ? <ListItemIcon>{route.icon}</ListItemIcon> : null}
+								<ListItemText primary={route.name} />
+							</ListItem>
+						) : null;
+					})}
 				</List>
 			</Drawer>
-			{props.children}
+			<main>
+				<Paper>{props.children}</Paper>
+			</main>
 		</>
 	);
 };
