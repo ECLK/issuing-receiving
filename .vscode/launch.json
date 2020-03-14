@@ -7,7 +7,6 @@
 		{
 			"type": "chrome",
 			"request": "launch",
-			"runtimeExecutable": "D:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
 			"name": "Launch Chrome against localhost",
 			"url": "http://localhost:3000",
 			"webRoot": "${workspaceFolder}/frontned"
