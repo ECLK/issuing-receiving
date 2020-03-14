@@ -13,34 +13,30 @@ export const App = (): React.ReactElement => {
 			<Authentication>
 				<Switch>
 					<Redirect exact={true} path="/" to={HOME} />
-					{routes?.map((route: RouteInterface, index: number) => {
+					{routes ?.map((route: RouteInterface, index: number) => {
 						if (route.protected) {
-							const routedComponent = (
+							return (
 								<ProtectedRoute
 									key={index}
 									path={route.path}
 									exact={route.exact}
 									component={route.component}
+									appLayout={route.appLayout}
 								/>
 							);
-							const render = route.appLayout ? (
-								<AppLayout key={index}>{routedComponent}</AppLayout>
-							) : (
-								routedComponent
-							);
-
-							return render;
 						} else {
-							const routedComponent = (
-								<Route key={index} path={route.path} exact={route.exact} component={route.component} />
+							return (
+								<Route
+									key={index}
+									path={route.path}
+									exact={route.exact}
+									component={
+										route.appLayout
+											? () => <AppLayout>{route.component}</AppLayout>
+											: route.component
+									}
+								/>
 							);
-							const render = route.appLayout ? (
-								<AppLayout key={index}>{routedComponent}</AppLayout>
-							) : (
-								routedComponent
-							);
-
-							return render;
 						}
 					})}
 				</Switch>
