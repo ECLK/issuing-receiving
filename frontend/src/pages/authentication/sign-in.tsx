@@ -4,7 +4,7 @@ import useStyles from "../../theme";
 import { AuthContext } from "../../helpers";
 import MuiAlert from "@material-ui/lab/Alert";
 import { useHistory } from "react-router-dom";
-import { signIn } from "../../utils";
+import { signIn, getCallbackUrl } from "../../utils";
 import { HOME } from "../../constants";
 
 export const SignIn = (): React.ReactElement => {
@@ -25,7 +25,7 @@ export const SignIn = (): React.ReactElement => {
 
 	useEffect(() => {
 		if (authState.authenticated) {
-			history?.push(HOME);
+			history?.push(getCallbackUrl()??"");
 		}
 	}, [authState.authenticated, history]);
 

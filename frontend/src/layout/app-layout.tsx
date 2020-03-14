@@ -10,7 +10,8 @@ import {
 	ListItem,
 	ListItemIcon,
 	ListItemText,
-	Paper
+	Paper,
+	CssBaseline
 } from "@material-ui/core";
 import useStyles from "../theme";
 import { routes } from "../configs";
@@ -22,7 +23,8 @@ export const AppLayout = (props: React.PropsWithChildren<any>): React.ReactEleme
 	const history = useHistory();
 
 	return (
-		<>
+		<div>
+			<CssBaseline />
 			<AppBar position="static" className={classes.appBar}>
 				<Toolbar>
 					<Typography variant="h6" className={classes.appBarTitle}>
@@ -31,26 +33,28 @@ export const AppLayout = (props: React.PropsWithChildren<any>): React.ReactEleme
 					<Button color="inherit">Login</Button>
 				</Toolbar>
 			</AppBar>
-			<Drawer variant="permanent" className={classes.drawer} classes={{ paper: classes.drawerPaper }}>
-				<List>
-					{routes.map((route: RouteInterface, index: number) => {
-						return route.showOnMenu ? (
-							<ListItem
-								key={index}
-								onClick={() => {
-									history.push(route.path);
-								}}
-							>
-								{route.icon ? <ListItemIcon>{route.icon}</ListItemIcon> : null}
-								<ListItemText primary={route.name} />
-							</ListItem>
-						) : null;
-					})}
-				</List>
-			</Drawer>
-			<main>
-				<Paper>{props.children}</Paper>
-			</main>
-		</>
+			<div className={classes.root}>
+				<Drawer variant="permanent" className={classes.drawer} classes={{ paper: classes.drawerPaper }}>
+					<List>
+						{routes.map((route: RouteInterface, index: number) => {
+							return route.showOnMenu ? (
+								<ListItem
+									key={index}
+									onClick={() => {
+										history.push(route.path);
+									}}
+								>
+									{route.icon ? <ListItemIcon>{route.icon}</ListItemIcon> : null}
+									<ListItemText primary={route.name} />
+								</ListItem>
+							) : null;
+						})}
+					</List>
+				</Drawer>
+				<main className={classes.content}>
+					<Paper className={classes.paper} square>{props.children}</Paper>
+				</main>
+			</div>
+		</div>
 	);
 };
