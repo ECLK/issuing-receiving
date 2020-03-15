@@ -13,7 +13,6 @@ export const drawerPaper = (theme: Theme) => ({
     width: DRAWER_WIDTH,
     minHeight: "calc(100vh - "+theme.mixins.toolbar.minHeight+"px)",
 	position: "absolute" as const,
-	zIndex:-1
 });
 
 export const drawer = (theme: Theme) => ({
