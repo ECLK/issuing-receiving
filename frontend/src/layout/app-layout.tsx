@@ -2,7 +2,6 @@ import React from "react";
 import {
 	AppBar,
 	Toolbar,
-	IconButton,
 	Typography,
 	Button,
 	Drawer,
@@ -16,11 +15,12 @@ import {
 import useStyles from "../theme";
 import { routes } from "../configs";
 import { RouteInterface } from "../models/routes";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 
 export const AppLayout = (props: React.PropsWithChildren<any>): React.ReactElement => {
 	const classes = useStyles();
 	const history = useHistory();
+	const location = useLocation();
 
 	return (
 		<div>
@@ -35,14 +35,16 @@ export const AppLayout = (props: React.PropsWithChildren<any>): React.ReactEleme
 			</AppBar>
 			<div className={classes.root}>
 				<Drawer variant="permanent" className={classes.drawer} classes={{ paper: classes.drawerPaper }}>
-					<List>
+					<List component="nav">
 						{routes.map((route: RouteInterface, index: number) => {
 							return route.showOnMenu ? (
 								<ListItem
+									button
 									key={index}
 									onClick={() => {
 										history.push(route.path);
 									}}
+									selected={route.path===location.pathname}
 								>
 									{route.icon ? <ListItemIcon>{route.icon}</ListItemIcon> : null}
 									<ListItemText primary={route.name} />
