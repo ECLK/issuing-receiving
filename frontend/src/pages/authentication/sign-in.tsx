@@ -5,7 +5,6 @@ import { AuthContext } from "../../helpers";
 import MuiAlert from "@material-ui/lab/Alert";
 import { useHistory } from "react-router-dom";
 import { signIn, getCallbackUrl } from "../../utils";
-import { HOME } from "../../constants";
 
 export const SignIn = (): React.ReactElement => {
 	const classes = useStyles();
