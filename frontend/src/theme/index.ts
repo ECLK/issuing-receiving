@@ -1,6 +1,7 @@
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { signInGrid, signInPaper } from "./sign-in";
 import { appBar, drawer, drawerPaper, appBarTitle, toolbar, root, content, paper } from "./app-layout";
+import { gridGeneric, listSecondary, dangerButton } from "./generic";
 
 const useStyles = makeStyles((theme: Theme) => ({
     signInGrid: signInGrid(theme),
@@ -12,7 +13,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     toolbar: toolbar(theme),
     root: root(theme),
 	content: content(theme),
-	paper:paper(theme)
+    paper: paper(theme),
+    gridGeneric: gridGeneric(theme),
+    listSecondary: listSecondary(theme),
+    dangerButton:dangerButton(theme)
 }));
 
 export default useStyles;
