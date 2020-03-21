@@ -3,12 +3,26 @@ from django.db import models
 # Create your models here.
 
 
-class ReportedToWork(models.Model):
-    reported_time_before_election_day = models.TimeField()
-    reported_time_on_election_day = models.TimeField()
+class ReportedToWorkElectionDay(models.Model):
+    time = models.TimeField()
     election = models.ForeignKey(
         "election.Election", on_delete=models.SET_NULL)
     staff = models.ForeignKey("staffs.Staffs", on_delete=models.CASCADE)
 
     class Meta:
-        unique_together = (("election, staff"))
+        constraints = [
+            models.UniqueConstraint(fields=["election, staff"],name="election_staff")
+        ]
+
+
+class ReportedToWorkBeforeElection(models.Model):
+    time = models.TimeField()
+    election = models.ForeignKey(
+        "election.Election", on_delete=models.SET_NULL)
+    staff = models.ForeignKey("staffs.Staffs", on_delete=models.CASCADE)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["election, staff"], name="election_staff")
+        ]
