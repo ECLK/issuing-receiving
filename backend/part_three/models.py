@@ -33,12 +33,11 @@ class ReceivedFromSPO(models.Model):
     f = models.IntegerField()
     d = models.IntegerField()
     c = models.IntegerField()
-    spo = models.ForeignKey("staffs.Staffs", on_delete=models.SET_NULL)
-    i_r_aro = models.ForeignKey("staffs.Staffs", on_delete=models.SET_NULL)
+    spo = models.ForeignKey("units.PollingStations", on_delete=models.SET_NULL)
+    i_r_aro = models.ForeignKey("staffs.IRAROPollingDistricts", on_delete=models.SET_NULL)
     election = models.ForeignKey(
-        "election.Election", on_delete=models.SET_NULL)
+        "election.Election", on_delete=models.CASCADE)
     entered_time = models.DateTimeField()
-    id = models.AutoField()
 
     class Meta:
-        unique_together = (("entered_time", "id"))
+        constraints=[models.UniqueConstraint(fields=["entered_time","election","spo","i_r_aro"])]

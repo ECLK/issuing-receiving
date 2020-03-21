@@ -31,18 +31,31 @@ class PollingStations(models.Model):
     number = models.IntegerField(unique=True)
     spo = models.ForeignKey(STAFF_MODEL, on_delete=models.SET_NULL)
     election = models.ForeignKey("election.Election", on_delete=models.CASCADE)
-    id = models.AutoField()
+    polling_district = models.ForeignKey(
+        PollingDistricts, on_delete=models.CASCADE)
 
     class Meta:
-        unique_together = (("election", "id"))
+        constraints = [
+            models.UniqueConstraint(
+                fields=["election", "number"], name="election_number")
+        ]
 
 
 class CountingCentre(models.Model):
     name = models.CharField(max_field=255)
     number = models.IntegerField(unique=True)
     cco = models.ForeignKey(STAFF_MODEL, on_delete=models.SET_NULL)
+    aro = models.ForeignKey(STAFF_MODEL, on_delete=models.SET_NULL)
     election = models.ForeignKey("election.Election", on_delete=models.CASCADE)
-    id = models.AutoField()
+    polling_division = models.ForeignKey(
+        'PollingDivisions', on_delete=models.CASCADE)
 
     class Meta:
-        unique_together = (("election", "id"))
+        constraints = [
+            models.UniqueConstraint(
+                fields=["election", "number"], name="election_number"),
+            models.UniqueConstraint(
+                fields=["election", "polling_division"], name="election_Polling_division"),
+            models.UniqueConstraint(
+                fields=["cco", "election"], name="cco_election")
+        ]

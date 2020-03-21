@@ -5,8 +5,8 @@ from django.db import models
 
 class IssuedToCCO(models.Model):
     issued_time = models.DateTimeField()
-    cco = models.ForeignKey("staffs.Staffs", on_delete=models.SET_NULL)
-    i_r_aro = models.ForeignKey("staffs.Staffs", on_delete=models.SET)
+    cco = models.ForeignKey("units.CountingCentre", on_delete=models.SET_NULL)
+    i_r_aro = models.ForeignKey("staffs.IRAROPollingDistricts", on_delete=models.SET)
     v = models.IntegerField()
     l = models.IntegerField()
     g = models.IntegerField()
@@ -14,10 +14,9 @@ class IssuedToCCO(models.Model):
     z = models.IntegerField()
     election = models.ForeignKey("election.Election", on_delete=models.CASCADE)
     entered_time = models.DateTimeField()
-    id = models.AutoField()
 
     class Meta:
-        unique_together = (("id", "entered_time"))
+        constraints=[models.UniqueConstraint(fields=["entered_time","election","i_r_aro","cco"])]
 
 
 class BallotBoxesIssuedToCCO:
