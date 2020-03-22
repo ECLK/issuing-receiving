@@ -4,58 +4,68 @@ from django.db import models
 STAFF_MODEL = "staffs.Staffs"
 
 
-class ElectoralDistricts(models.Model):
+class ElectoralDistrict(models.Model):
     name = models.CharField(max_length=100)
 
 
-class AdministrativeDistricts(models.Model):
+class AdministrativeDistrict(models.Model):
     name = models.CharField(max_length=100)
     electoral_district = models.ForeignKey(
-        'ElectoralDistricts', on_delete=models.SET_NULL)
+        'ElectoralDistrict', on_delete=models.SET_NULL, null=True, related_name="administrative_districts")
 
 
-class PollingDivisions(models.Model):
+class PollingDivision(models.Model):
     name = models.CharField(max_length=100)
     administrative_district = models.ForeignKey(
-        'AdministrativeDistricts', on_delete=models.SET_NULL)
+        'AdministrativeDistrict', on_delete=models.SET_NULL, null=True, related_name="polling_divisions")
 
 
-class PollingDistricts(models.Model):
+class PollingDistrict(models.Model):
     name = models.CharField(max_length=100)
     polling_division = models.ForeignKey(
-        'PollingDivisions', on_delete=models.SET_NULL)
+        'PollingDivision', on_delete=models.SET_NULL, null=True, related_name="polling_districts")
 
 
-class PollingStations(models.Model):
+class PollingStation(models.Model):
     name = models.CharField(max_length=255)
-    number = models.IntegerField(unique=True)
-    spo = models.ForeignKey(STAFF_MODEL, on_delete=models.SET_NULL)
-    election = models.ForeignKey("election.Election", on_delete=models.CASCADE)
+    number = models.IntegerField()
+    spo = models.ManyToManyField(STAFF_MODEL, related_name="polling_stations")
+    election = models.ManyToManyField(
+        "election.Election", related_name="polling_stations")
     polling_district = models.ForeignKey(
-        PollingDistricts, on_delete=models.CASCADE)
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=["election", "number"], name="election_number")
-        ]
-
-
-class CountingCentre(models.Model):
-    name = models.CharField(max_field=255)
-    number = models.IntegerField(unique=True)
-    cco = models.ForeignKey(STAFF_MODEL, on_delete=models.SET_NULL)
-    aro = models.ForeignKey(STAFF_MODEL, on_delete=models.SET_NULL)
-    election = models.ForeignKey("election.Election", on_delete=models.CASCADE)
-    polling_division = models.ForeignKey(
-        'PollingDivisions', on_delete=models.CASCADE)
+        PollingDistrict, on_delete=models.CASCADE, related_name="polling_stations")
 
     class Meta:
         constraints = [
             models.UniqueConstraint(
                 fields=["election", "number"], name="election_number"),
             models.UniqueConstraint(
+                fields=["spo", "election"], name="election_spo"),
+            models.UniqueConstraint(
+                fields=["spo", "number"], name="number_spo")
+        ]
+
+
+class CountingCentre(models.Model):
+    name = models.CharField(max_length=255)
+    number = models.IntegerField(unique=True)
+    cco = models.ManyToManyField(
+        STAFF_MODEL, related_name="counting_centres_cco")
+    aro = models.ManyToManyField(
+        STAFF_MODEL, related_name="counting_centres_aro")
+    election = models.ManyToManyField(
+        "election.Election", related_name="counting_centres")
+    polling_division = models.ForeignKey(
+        'PollingDivision', on_delete=models.CASCADE, related_name="counting_centres")
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["election", "number"], name="cc_election_number"),
+            models.UniqueConstraint(
                 fields=["election", "polling_division"], name="election_Polling_division"),
             models.UniqueConstraint(
-                fields=["cco", "election"], name="cco_election")
+                fields=["cco", "election"], name="cco_election"),
+            models.UniqueConstraint(
+                fields=["aro", "election"], name="aro_election")
         ]

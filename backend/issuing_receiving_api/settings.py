@@ -39,7 +39,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
-    'election'
+    'election',
+    'staffs',
+    'units',
+    'part_one',
+    'part_two',
+    'part_three',
+    'part_four',
+    'part_five'
 ]
 
 MIDDLEWARE = [
