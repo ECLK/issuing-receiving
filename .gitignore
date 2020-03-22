@@ -1,3 +1,4 @@
 .vscode
 backend/**/migrations/**
 backend/**/__pycache__/**
+backend/*.sqlite3
