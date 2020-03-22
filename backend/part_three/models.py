@@ -1,4 +1,7 @@
 from django.db import models
+from units.models import PollingStation
+from staffs.models import IRAROPollingDistricts
+from election.models import Election
 
 # Create your models here.
 
@@ -33,12 +36,12 @@ class ReceivedFromSPO(models.Model):
     f = models.IntegerField()
     d = models.IntegerField()
     c = models.IntegerField()
-    spo = models.ForeignKey("units.PollingStation",
+    spo = models.ForeignKey(PollingStation,
                             on_delete=models.SET_NULL, null=True, related_name="received_from_spo_part_three")
     i_r_aro = models.ForeignKey(
-        "staffs.IRAROPollingDistricts", on_delete=models.SET_NULL, null=True, related_name="received_from_spo_part_three")
+        IRAROPollingDistricts, on_delete=models.SET_NULL, null=True, related_name="received_from_spo_part_three")
     election = models.ForeignKey(
-        "election.Election", on_delete=models.CASCADE, related_name="received_from_spo_part_three")
+        Election, on_delete=models.CASCADE, related_name="received_from_spo_part_three")
     entered_time = models.DateTimeField()
 
     class Meta:
