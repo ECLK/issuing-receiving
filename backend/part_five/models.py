@@ -5,10 +5,12 @@ from django.db import models
 
 class IssuedToAROCC(models.Model):
     issued_time = models.DateTimeField()
-    i_r_aro = models.ForeignKey("staffs.IRAROPollingDistricts", on_delete=models.SET_NULL)
-    aro_cc = models.ForeignKey("units.CountingCentre", on_delete=models.SET_NULL)
+    i_r_aro = models.ForeignKey(
+        "staffs.IRAROPollingDistricts", on_delete=models.SET_NULL, null=True, related_name="issued_to_aro_cc")
+    aro_cc = models.ForeignKey(
+        "units.CountingCentre", on_delete=models.SET_NULL, null=True, related_name="issued_to_aro_cc")
     election = models.ForeignKey(
-        "election.Election", on_delete=models.SET_NULL)
+        "election.Election", on_delete=models.SET_NULL, null=True, related_name="issued_to_aro_cc")
     entered_time = models.DateTimeField()
     e1 = models.IntegerField()
     zp = models.IntegerField()
@@ -27,38 +29,40 @@ class IssuedToAROCC(models.Model):
     m = models.IntegerField()
 
     class Meta:
-        constraints=[models.UniqueConstraint(fields=["election","entered_time","aro_cc","i_r_aro"])]
+        constraints=[models.UniqueConstraint(fields=["election","entered_time","aro_cc","i_r_aro"],name="p5_arocc")]
 
 
 class Cover5(models.Model):
     issued_to_aro_cc = models.ForeignKey(
-        "IssuedToAROCC", on_delete=models.CASCADE)
+        "IssuedToAROCC", on_delete=models.CASCADE,related_name="cover5")
     polling_district = models.ForeignKey(
-        "units.PollingDistricts", on_delete=models.SET_NULL)
+        "units.PollingDistrict", on_delete=models.SET_NULL, null=True, related_name="cover5")
 
     class Meta:
-        constraints = [models.UniqueConstraint(fields=["issued_to_aro_cc", "polling_district"])]
+        constraints = [models.UniqueConstraint(
+            fields=["issued_to_aro_cc", "polling_district"], name="p5_cover5")]
 
 
 class Cover6(models.Model):
     issued_to_aro_cc = models.ForeignKey(
-        "IssuedToAROCC", on_delete=models.CASCADE)
+        "IssuedToAROCC", on_delete=models.CASCADE, related_name="cover6")
     polling_district = models.ForeignKey(
-        "units.PollingDistricts", on_delete=models.SET_NULL)
+        "units.PollingDistrict", on_delete=models.SET_NULL, null=True, related_name="cover6")
 
     class Meta:
         constraints = [models.UniqueConstraint(
-            fields=["issued_to_aro_cc", "polling_district"])]
+            fields=["issued_to_aro_cc", "polling_district"], name="p5_cover6")]
 
 
 class IssuedToPD(models.Model):
     issued_time = models.DateTimeField()
-    i_r_aro = models.ForeignKey("staffs.IRAROPollingDistricts", on_delete=models.SET_NULL)
-    in_charge = models.ForeignKey("staffs.PDStorageInCharge", on_delete=models.SET_NULL)
+    i_r_aro = models.ForeignKey("staffs.IRAROPollingDistricts",
+                                on_delete=models.SET_NULL, null=True, related_name="issued_to_pd")
+    in_charge = models.ForeignKey(
+        "staffs.PDStorageInCharge", on_delete=models.SET_NULL, null=True, related_name="issued_to_pd")
     election = models.ForeignKey(
-        "election.Election", on_delete=models.SET_NULL)
+        "election.Election", on_delete=models.SET_NULL, null=True, related_name="issued_to_pd")
     entered_time = models.DateTimeField()
-    id = models.AutoField()
     st = models.IntegerField()
     tic = models.IntegerField()
     gn = models.IntegerField()
@@ -69,4 +73,5 @@ class IssuedToPD(models.Model):
     u1 = models.IntegerField()
 
     class Meta:
-        constraints=[models.UniqueConstraint(fields=["entered_time","election","in_charge","i_r_aro"])]
+        constraints = [models.UniqueConstraint(
+            fields=["entered_time", "election", "in_charge", "i_r_aro"], name="p5_pd")]

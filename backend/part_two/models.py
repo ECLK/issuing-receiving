@@ -8,30 +8,32 @@ class IssuedToSPO(models.Model):
     no_of_stamps = models.IntegerField()
     no_of_pens = models.IntegerField()
     spo = models.ForeignKey(
-        "units.PollingStations", on_delete=models.SET_NULL)
+        "units.PollingStation", on_delete=models.SET_NULL, null=True, related_name="issued_to_spo")
     i_r_aro = models.ForeignKey(
-        "staffs.IRAROPollingDistricts", on_delete=models.SET_NULL)
+        "staffs.IRAROPollingDistricts", on_delete=models.SET_NULL, null=True, related_name="issued_to_spo")
     election = models.ForeignKey(
-        "election.Election", on_delete=models.SET_NULL)
+        "election.Election", on_delete=models.SET_NULL, null=True, related_name="issued_to_spo")
     entered_time = models.DateTimeField()
 
     class Meta:
-        constraints = [models.UniqueConstraint(fields=["entered_time", "election", "i_r_aro", "spo"], name="unique")]
-
+        constraints = [models.UniqueConstraint(
+            fields=["entered_time", "election", "i_r_aro", "spo"], name="p2_issued")]
 
 
 class BallotBoxesIssuedToSPO(models.Model):
-    serial_number = models.CharField()
-    spo = models.ForeignKey("units.PollingStations", on_delete=models.SET_NULL)
+    serial_number = models.CharField(max_length=255)
+    spo = models.ForeignKey("units.PollingStation",
+                            on_delete=models.SET_NULL, null=True, related_name="ballot_box_issued_to_spo")
     i_r_aro = models.ForeignKey(
-        "staffs.IRAROPollingDistrict", on_delete=models.SET_NULL)
+        "staffs.IRAROPollingDistricts", on_delete=models.SET_NULL, null=True, related_name="ballot_box_issued_to_spo")
     election = models.ForeignKey(
-        "election.Election", on_delete=models.SET_NULL)
+        "election.Election", on_delete=models.SET_NULL, null=True, related_name="ballot_box_issued_to_spo")
     entered_time = models.DateTimeField()
     issued_time = models.DateTimeField()
 
     class Meta:
-        constraints = [models.UniqueConstraint(fields=["serial_number", "election", "entered_time"],name="sn_election")]
+        constraints = [models.UniqueConstraint(
+            fields=["serial_number", "election", "entered_time"], name="p2_issued_sn_election")]
 
 
 class ReceivedFromSPO(models.Model):
@@ -39,28 +41,29 @@ class ReceivedFromSPO(models.Model):
     no_of_stamps = models.IntegerField()
     no_of_pens = models.IntegerField()
     spo = models.ForeignKey(
-        "units.PollingStations", on_delete=models.SET_NULL)
+        "units.PollingStation", on_delete=models.SET_NULL, null=True, related_name="received_from_spo_part_two")
     i_r_aro = models.ForeignKey(
-        "staffs.IRAROPollingDistricts", on_delete=models.SET_NULL)
+        "staffs.IRAROPollingDistricts", on_delete=models.SET_NULL, null=True, related_name="received_from_spo_part_two")
     election = models.ForeignKey(
-        "election.Election", on_delete=models.SET_NULL)
+        "election.Election", on_delete=models.SET_NULL, null=True, related_name="received_from_spo_part_two")
     entered_time = models.DateTimeField()
 
     class Meta:
         constraints = [models.UniqueConstraint(
-            fields=["entered_time", "election", "i_r_aro", "spo"], name="unique")]
+            fields=["entered_time", "election", "i_r_aro", "spo"], name="p2_received")]
 
 
 class BallotBoxesReceived(models.Model):
-    serial_number = models.CharField()
-    spo = models.ForeignKey("units.PollingStations", on_delete=models.SET_NULL)
+    serial_number = models.CharField(max_length=255)
+    spo = models.ForeignKey("units.PollingStation",
+                            on_delete=models.SET_NULL, null=True, related_name="ballot_box_received_from_spo")
     i_r_aro = models.ForeignKey(
-        "staffs.IRAROPollingDistrict", on_delete=models.SET_NULL)
+        "staffs.IRAROPollingDistricts", on_delete=models.SET_NULL, null=True, related_name="ballot_box_received_from_spo")
     election = models.ForeignKey(
-        "election.Election", on_delete=models.SET_NULL)
+        "election.Election", on_delete=models.SET_NULL, null=True, related_name="ballot_box_received_from_spo")
     entered_time = models.DateTimeField()
     received_time = models.DateTimeField()
 
     class Meta:
-        constraints=[models.UniqueConstraint(fields=["serial_number","election","entered_time"],name="sn_election")]
-        
+        constraints = [models.UniqueConstraint(
+            fields=["serial_number", "election", "entered_time"], name="p2_received_sn_election")]

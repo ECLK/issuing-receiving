@@ -10,23 +10,26 @@ class Staffs(models.Model):
 
 
 class IRAROPollingDistricts(models.Model):
-    aro = models.OneToOneField("staffs.Staffs", on_delete=models.CASCADE)
+    aro = models.ForeignKey("staffs.Staffs", on_delete=models.CASCADE, related_name="IRAROs")
     polling_district = models.ForeignKey(
-        "units.PollingDistricts", on_delete=models.CASCADE)
-    election = models.ForeignKey("election.Election", on_delete=models.CASCADE)
+        "units.PollingDistrict", on_delete=models.CASCADE, related_name="IRAROs")
+    election = models.ForeignKey(
+        "election.Election", on_delete=models.CASCADE, related_name="IRAROs")
 
     class Meta:
         constraints = [models.UniqueConstraint(
-            fields=["polling_district", "election"], name="pd_election")]
+            fields=["polling_district", "election"], name="pd_election"),]
 
 
 class PDStorageInCharge(models.Model):
-    in_charge = models.OneToOneField(
-        "staffs.Staffs", on_delete=models.CASCADE)
-    polling_district = models.ForeignKey(
-        "units.PollingDistricts", on_delete=models.CASCADE)
-    election = models.ForeignKey("election.Election", on_delete=models.CASCADE)
+    in_charge = models.ForeignKey(
+        "staffs.Staffs", on_delete=models.CASCADE, related_name="storage_in_charges")
+    polling_division = models.ForeignKey(
+        "units.PollingDivision", on_delete=models.CASCADE, related_name="storage_in_charges")
+    election = models.ForeignKey(
+        "election.Election", on_delete=models.CASCADE, related_name="storage_in_charges")
 
     class Meta:
         constraints = [models.UniqueConstraint(
-            fields=["polling_district", "election"], name="pd_election")]
+            fields=["polling_division", "election"], name="storage_pd_election"),
+            models.UniqueConstraint(fields=["in_charge","election"], name="in_charge_election")]
