@@ -1,2 +1,3 @@
 .vscode
-backend/**/migrations
+backend/**/migrations/**
+backend/**/__pycache__/**
