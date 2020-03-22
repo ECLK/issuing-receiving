@@ -1,5 +1,7 @@
 from django.db import models
-
+from units.models import PollingStation
+from staffs.models import IRAROPollingDistricts
+from election.models import Election
 # Create your models here.
 
 
@@ -8,11 +10,11 @@ class IssuedToSPO(models.Model):
     no_of_stamps = models.IntegerField()
     no_of_pens = models.IntegerField()
     spo = models.ForeignKey(
-        "units.PollingStation", on_delete=models.SET_NULL, null=True, related_name="issued_to_spo")
+        PollingStation, on_delete=models.SET_NULL, null=True, related_name="issued_to_spo")
     i_r_aro = models.ForeignKey(
-        "staffs.IRAROPollingDistricts", on_delete=models.SET_NULL, null=True, related_name="issued_to_spo")
+        IRAROPollingDistricts, on_delete=models.SET_NULL, null=True, related_name="issued_to_spo")
     election = models.ForeignKey(
-        "election.Election", on_delete=models.SET_NULL, null=True, related_name="issued_to_spo")
+        Election, on_delete=models.SET_NULL, null=True, related_name="issued_to_spo")
     entered_time = models.DateTimeField()
 
     class Meta:
@@ -22,12 +24,12 @@ class IssuedToSPO(models.Model):
 
 class BallotBoxesIssuedToSPO(models.Model):
     serial_number = models.CharField(max_length=255)
-    spo = models.ForeignKey("units.PollingStation",
+    spo = models.ForeignKey(PollingStation,
                             on_delete=models.SET_NULL, null=True, related_name="ballot_box_issued_to_spo")
     i_r_aro = models.ForeignKey(
-        "staffs.IRAROPollingDistricts", on_delete=models.SET_NULL, null=True, related_name="ballot_box_issued_to_spo")
+        IRAROPollingDistricts, on_delete=models.SET_NULL, null=True, related_name="ballot_box_issued_to_spo")
     election = models.ForeignKey(
-        "election.Election", on_delete=models.SET_NULL, null=True, related_name="ballot_box_issued_to_spo")
+        Election, on_delete=models.SET_NULL, null=True, related_name="ballot_box_issued_to_spo")
     entered_time = models.DateTimeField()
     issued_time = models.DateTimeField()
 
@@ -41,11 +43,11 @@ class ReceivedFromSPO(models.Model):
     no_of_stamps = models.IntegerField()
     no_of_pens = models.IntegerField()
     spo = models.ForeignKey(
-        "units.PollingStation", on_delete=models.SET_NULL, null=True, related_name="received_from_spo_part_two")
+        PollingStation, on_delete=models.SET_NULL, null=True, related_name="received_from_spo_part_two")
     i_r_aro = models.ForeignKey(
-        "staffs.IRAROPollingDistricts", on_delete=models.SET_NULL, null=True, related_name="received_from_spo_part_two")
+        IRAROPollingDistricts, on_delete=models.SET_NULL, null=True, related_name="received_from_spo_part_two")
     election = models.ForeignKey(
-        "election.Election", on_delete=models.SET_NULL, null=True, related_name="received_from_spo_part_two")
+        Election, on_delete=models.SET_NULL, null=True, related_name="received_from_spo_part_two")
     entered_time = models.DateTimeField()
 
     class Meta:
@@ -55,12 +57,12 @@ class ReceivedFromSPO(models.Model):
 
 class BallotBoxesReceived(models.Model):
     serial_number = models.CharField(max_length=255)
-    spo = models.ForeignKey("units.PollingStation",
+    spo = models.ForeignKey(PollingStation,
                             on_delete=models.SET_NULL, null=True, related_name="ballot_box_received_from_spo")
     i_r_aro = models.ForeignKey(
-        "staffs.IRAROPollingDistricts", on_delete=models.SET_NULL, null=True, related_name="ballot_box_received_from_spo")
+        IRAROPollingDistricts, on_delete=models.SET_NULL, null=True, related_name="ballot_box_received_from_spo")
     election = models.ForeignKey(
-        "election.Election", on_delete=models.SET_NULL, null=True, related_name="ballot_box_received_from_spo")
+        Election, on_delete=models.SET_NULL, null=True, related_name="ballot_box_received_from_spo")
     entered_time = models.DateTimeField()
     received_time = models.DateTimeField()
 

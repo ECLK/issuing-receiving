@@ -1,21 +1,24 @@
 from django.db import models
+from units.models import CountingCentre
+from staffs.models import IRAROPollingDistricts
+from election.models import Election
 
 # Create your models here.
 
 
 class IssuedToCCO(models.Model):
     issued_time = models.DateTimeField()
-    cco = models.ForeignKey("units.CountingCentre",
+    cco = models.ForeignKey(CountingCentre,
                             on_delete=models.SET_NULL, null=True, related_name="issued_to_cco")
     i_r_aro = models.ForeignKey(
-        "staffs.IRAROPollingDistricts", on_delete=models.SET_NULL, null=True, related_name="issued_to_cco")
+        IRAROPollingDistricts, on_delete=models.SET_NULL, null=True, related_name="issued_to_cco")
     v = models.IntegerField()
     l = models.IntegerField()
     g = models.IntegerField()
     g1 = models.IntegerField()
     z = models.IntegerField()
     election = models.ForeignKey(
-        "election.Election", on_delete=models.CASCADE, related_name="issued_to_cco")
+        Election, on_delete=models.CASCADE, related_name="issued_to_cco")
     entered_time = models.DateTimeField()
 
     class Meta:
@@ -23,5 +26,5 @@ class IssuedToCCO(models.Model):
 
 
 class BallotBoxesIssuedToCCO:
-    issued_cco = models.ForeignKey("IssuedToCCO", on_delete=models.CASCADE,related_name="ballot_box_issued_to_cco")
+    issued_cco = models.ForeignKey(IssuedToCCO, on_delete=models.CASCADE,related_name="ballot_box_issued_to_cco")
     serial_number = models.CharField(max_length=255)
