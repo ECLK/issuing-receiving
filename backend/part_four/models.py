@@ -25,6 +25,6 @@ class IssuedToCCO(models.Model):
         constraints=[models.UniqueConstraint(fields=["entered_time","election","i_r_aro","cco"],name="p4_cco")]
 
 
-class BallotBoxesIssuedToCCO:
+class BallotBoxesIssuedToCCO(models.Model):
     issued_cco = models.ForeignKey(IssuedToCCO, on_delete=models.CASCADE,related_name="ballot_box_issued_to_cco")
     serial_number = models.CharField(max_length=255)
