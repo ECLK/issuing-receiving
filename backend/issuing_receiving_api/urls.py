@@ -24,5 +24,6 @@ urlpatterns = [
     path("units/", include("units.urls")),
     path("part-two/", include("part_two.urls")),
     path("part-three/", include("part_three.urls")),
-    path("part-four/", include("part_four.urls"))
+    path("part-four/", include("part_four.urls")),
+    path("part-five/", include("part_five.urls"))
 ]
