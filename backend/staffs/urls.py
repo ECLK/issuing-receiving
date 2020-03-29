@@ -3,7 +3,7 @@ from staffs.views import StaffsViewSet, IRAROViewSet, PDStorageInChargeViewSet
 
 router = routers.DefaultRouter()
 router.register('staffs', StaffsViewSet)
-router.register('ir_aro', IRAROViewSet)
-router.register("pd_storage_in_charge", PDStorageInChargeViewSet)
+router.register('ir-aro', IRAROViewSet)
+router.register("pd-storage-in-charge", PDStorageInChargeViewSet)
 
 urlpatterns = router.urls

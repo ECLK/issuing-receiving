@@ -21,5 +21,6 @@ urlpatterns = [
     path('election/', include('election.urls')),
     path(r'report-to-work/', include("part_one.urls")),
     path(r'staffs/', include("staffs.urls")),
-    path("units/", include("units.urls"))
+    path("units/", include("units.urls")),
+    path("part-two/",include("part_two.urls"))
 ]
