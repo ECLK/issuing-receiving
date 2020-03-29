@@ -2,11 +2,11 @@ from units.views import ElectoralDistrictViewSet, AdministrativeDistrictViewSet,
 from rest_framework import routers
 
 router = routers.DefaultRouter()
-router.register("electoral_district", ElectoralDistrictViewSet)
-router.register("administrative_district", AdministrativeDistrictViewSet)
-router.register("polling_division", PollingDivisionViewSet)
-router.register("polling_district", PollingDistrictViewSet)
-router.register(r'election/(?P<election>.+)/polling_station', PollingStationViewSet)
-router.register(r'election/(?P<election>.+)/counting_centre', CountingCentreViewSet)
+router.register("electoral-district", ElectoralDistrictViewSet)
+router.register("administrative-district", AdministrativeDistrictViewSet)
+router.register("polling-division", PollingDivisionViewSet)
+router.register("polling-district", PollingDistrictViewSet)
+router.register(r'election/(?P<election>.+)/polling-station', PollingStationViewSet)
+router.register(r'election/(?P<election>.+)/counting-centre', CountingCentreViewSet)
 
 urlpatterns = router.urls
