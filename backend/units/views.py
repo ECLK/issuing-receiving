@@ -1,6 +1,20 @@
 from rest_framework import viewsets
-from units.serializers import ElectoralDistrictSerializer, AdministrativeDistrictSerializer, PollingDivisionSerializer, PollingDistrictSerializer, PollingStationSerializer, CountingCentreSerializer
-from units.models import ElectoralDistrict, AdministrativeDistrict, PollingDivision, PollingDistrict, PollingStation, CountingCentre
+from units.serializers import (
+    ElectoralDistrictSerializer,
+    AdministrativeDistrictSerializer,
+    PollingDivisionSerializer,
+    PollingDistrictSerializer,
+    PollingStationSerializer,
+    CountingCentreSerializer
+    )
+from units.models import (
+    ElectoralDistrict,
+    AdministrativeDistrict,
+    PollingDivision,
+    PollingDistrict,
+    PollingStation,
+    CountingCentre
+)
 
 # Create your views here.
 
@@ -29,7 +43,15 @@ class PollingStationViewSet(viewsets.ModelViewSet):
     queryset = PollingStation.objects.all()
     serializer_class = PollingStationSerializer
 
+    def get_queryset(self):
+        election = self.kwargs['election']
+        return PollingStation.objects.filter(election__id=election)
+
 
 class CountingCentreViewSet(viewsets.ModelViewSet):
     queryset = CountingCentre.objects.all()
     serializer_class = CountingCentreSerializer
+
+    def get_queryset(self):
+        election = self.kwargs['election']
+        return PollingStation.objects.filter(election__id=election)
