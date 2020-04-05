@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 # Create your models here.
 
 
@@ -8,17 +8,23 @@ class Staffs(models.Model):
     address = models.CharField(max_length=255)
     nic = models.CharField(max_length=255, unique=True)
 
-
-class IRAROPollingDistricts(models.Model):
-    aro = models.ForeignKey("staffs.Staffs", on_delete=models.CASCADE, related_name="IRAROs")
-    polling_district = models.ForeignKey(
-        "units.PollingDistrict", on_delete=models.CASCADE, related_name="IRAROs")
-    election = models.ForeignKey(
-        "election.Election", on_delete=models.CASCADE, related_name="IRAROs")
+class IRARO(models.Model):
+    staff = models.ForeignKey(Staffs, on_delete=models.CASCADE, related_name="aros")
+    election = models.ForeignKey("election.Election", on_delete=models.CASCADE, related_name="aros")
+    user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, related_name="aro")
 
     class Meta:
-        constraints = [models.UniqueConstraint(
-            fields=["polling_district", "election"], name="pd_election"),]
+        constraints = [models.UniqueConstraint(fields=["staff", "election"], name="Staff_election")]
+        
+
+class IRAROPollingDistricts(models.Model):
+    aro = models.ForeignKey(IRARO, on_delete=models.CASCADE, related_name="polling_districts")
+    polling_district = models.ForeignKey(
+        "units.PollingDistrict", on_delete=models.CASCADE, related_name="IRAROs")
+
+    class Meta:
+        constraints=[models.UniqueConstraint(fields=["aro","polling_district"], name="aro_pd")]
+
 
 
 class PDStorageInCharge(models.Model):

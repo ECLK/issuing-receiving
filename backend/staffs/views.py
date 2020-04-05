@@ -1,17 +1,108 @@
-from rest_framework import viewsets
-from staffs.models import Staffs, IRAROPollingDistricts, PDStorageInCharge
-from staffs.serializers import StaffsSerializer, IRAROSerializer, PDStorageInChargeSerializer
-
+from rest_framework import viewsets, status
+from staffs.models import Staffs, IRAROPollingDistricts, IRARO, PDStorageInCharge
+from staffs.serializers import (
+    StaffsSerializer,
+    IRAROSerializer,
+    PDStorageInChargeSerializer,
+    IRAROPollingDistrictsSerializer,
+    UserSerializer
+)
+from units.serializers import (
+    PollingDistrictSerializer,
+    PollingStationSerializer,
+    CountingCentreSerializer,
+    PollingDivisionSerializer,
+    AdministrativeDistrictSerializer,
+    ElectoralDistrictSerializer
+)
+from election.serializers import (
+    ElectionSerializer
+)
+from rest_framework.permissions import IsAdminUser
+from rest_framework.decorators import action
+from django.contrib.auth.models import User
+from utils.permissions import ReadOnly
+from rest_framework.response import Response
 # Create your views here.
 
 class StaffsViewSet(viewsets.ModelViewSet):
     queryset = Staffs.objects.all()
     serializer_class = StaffsSerializer
-    
+
+
 class IRAROViewSet(viewsets.ModelViewSet):
-    queryset = IRAROPollingDistricts.objects.all()
+    queryset = IRARO.objects.all()
     serializer_class = IRAROSerializer
+    permission_classes = (IsAdminUser | ReadOnly,)
+
+    @action(detail=False, methods=["GET"], permission_classes=(ReadOnly,), url_path="get-my-details")
+    def get_my_details(self, request):
+        try:
+            user = request.user
+            staff = user.aro.staff
+            polling_districts = []
+            
+            for pd in user.aro.polling_districts.all():
+                polling_districts.append(pd.polling_district)
+
+            polling_division = polling_districts[0].polling_division
+            administrative_district = polling_division.administrative_district
+            electoral_district = administrative_district.electoral_district
+            election=request.user.aro.election
+            polling_stations = []
+
+            for pd in polling_districts:
+                ps=pd.polling_stations.all()
+                polling_stations.append(*ps.all())
+
+
+            counting_centre = polling_division.counting_centres.filter(election=election)
+            
+            user_data = UserSerializer(user).data
+            staff_data = StaffsSerializer(staff).data
+            polling_districts_data = PollingDistrictSerializer(polling_districts, many=True).data
+            polling_division_data = PollingDivisionSerializer(polling_division).data
+            administrative_district_data = AdministrativeDistrictSerializer(administrative_district).data
+            electoral_district_data = ElectoralDistrictSerializer(electoral_district).data
+            election_data = ElectionSerializer(election).data
+            polling_stations_data = PollingStationSerializer(polling_stations, many=True).data
+            counting_centre_data = CountingCentreSerializer(counting_centre, many=True).data
+
+            my_details = {
+                "profile": dict(user_data, **staff_data),
+                "polling_districts": polling_districts_data,
+                "polling_division": polling_division_data,
+                "administrative_district": administrative_district_data,
+                "electoral_district": electoral_district_data,
+                "election": election_data,
+                "polling_stations": polling_stations_data,
+                "counting_centre":counting_centre_data
+            }
+            
+            return Response(my_details, status=status.HTTP_200_OK)
+        except:
+            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class IRAROPollingDistrictsViewSet(viewsets.ModelViewSet):
+    queryset = IRAROPollingDistricts.objects.all()
+    serializer_class = IRAROPollingDistrictsSerializer
+    permission_classes = (IsAdminUser | ReadOnly,)
+
 
 class PDStorageInChargeViewSet(viewsets.ModelViewSet):
     queryset = PDStorageInCharge.objects.all()
     serializer_class = PDStorageInChargeSerializer
+    permission_classes = (IsAdminUser,)
+
+    @action(detail=False, methods=["GET"], permission_classes=(ReadOnly,),
+    url_path="storage-in-charge-my-polling-division")
+    def storage_in_charge_my_polling_division(self, request):
+        try:
+            pd = request.user.aro.polling_districts.all()[0].polling_district.polling_division
+            election=request.user.aro.election
+            in_charge = PDStorageInCharge.objects.filter(polling_division=pd, election=election)
+            return Response(self.get_serializer(in_charge, many=True).data, status=status.HTTP_200_OK)
+        except:
+            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
