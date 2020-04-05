@@ -1,5 +1,5 @@
 from django.db import models
-from staffs.models import IRAROPollingDistricts, PDStorageInCharge
+from staffs.models import IRARO, PDStorageInCharge
 from units.models import CountingCentre
 from election.models import Election
 from units.models import PollingDistrict
@@ -9,7 +9,7 @@ from units.models import PollingDistrict
 class IssuedToAROCC(models.Model):
     issued_time = models.DateTimeField()
     i_r_aro = models.ForeignKey(
-        IRAROPollingDistricts, on_delete=models.SET_NULL, null=True, related_name="issued_to_aro_cc")
+        IRARO, on_delete=models.SET_NULL, null=True, related_name="issued_to_aro_cc")
     aro_cc = models.ForeignKey(
         CountingCentre, on_delete=models.SET_NULL, null=True, related_name="issued_to_aro_cc")
     election = models.ForeignKey(
@@ -59,7 +59,7 @@ class Cover6(models.Model):
 
 class IssuedToPD(models.Model):
     issued_time = models.DateTimeField()
-    i_r_aro = models.ForeignKey("staffs.IRAROPollingDistricts",
+    i_r_aro = models.ForeignKey("staffs.IRARO",
                                 on_delete=models.SET_NULL, null=True, related_name="issued_to_pd")
     in_charge = models.ForeignKey(
         PDStorageInCharge, on_delete=models.SET_NULL, null=True, related_name="issued_to_pd")
