@@ -30,7 +30,7 @@ class PollingStation(models.Model):
     name = models.CharField(max_length=255)
     number = models.IntegerField()
     spo = models.ForeignKey(
-        Staffs, related_name="polling_stations", on_delete=models.CASCADE, null=True)
+        Staffs, related_name="polling_stations", on_delete=models.CASCADE, null=True, blank=True)
     election = models.ForeignKey(
         Election, related_name="polling_stations",on_delete=models.CASCADE, null=True)
     polling_district = models.ForeignKey(
@@ -51,9 +51,9 @@ class CountingCentre(models.Model):
     name = models.CharField(max_length=255)
     number = models.IntegerField(unique=True)
     cco = models.ForeignKey(
-        Staffs, related_name="counting_centres_cco", on_delete=models.CASCADE, null=True)
+        Staffs, related_name="counting_centres_cco", on_delete=models.CASCADE, null=True, blank=True)
     aro = models.ForeignKey(
-        Staffs, related_name="counting_centres_aro", on_delete=models.CASCADE, null=True)
+        Staffs, related_name="counting_centres_aro", on_delete=models.CASCADE, null=True, blank=True)
     election = models.ForeignKey(
         Election, related_name="counting_centres", on_delete=models.CASCADE, null=True)
     polling_division = models.ForeignKey(

@@ -9,25 +9,27 @@ class ElectoralDistrictSerializer(serializers.ModelSerializer):
 class AdministrativeDistrictSerializer(serializers.ModelSerializer):
     class Meta:    
         model = AdministrativeDistrict
-        fields = ["name", "electoral_district"]
+        fields = ["name", "electoral_district","id"]
     
 class PollingDivisionSerializer(serializers.ModelSerializer):
     class Meta:
         model = PollingDivision
-        fields = ["name", "administrative_district"]
+        fields = ["name", "administrative_district", "id"]
 
 class PollingDistrictSerializer(serializers.ModelSerializer):
     class Meta:
         model = PollingDistrict
-        fields = ["name", "polling_division"]
+        fields = ["name", "polling_division", "id"]
     
 class PollingStationSerializer(serializers.ModelSerializer):
     class Meta:
         model = PollingStation
-        fields=["election","number","spo","election","polling_district"]
+        fields = ["election", "number", "spo",
+                  "name", "polling_district", "id"]
 
 class CountingCentreSerializer(serializers.ModelSerializer):
     class Meta:
         model = CountingCentre
-        fields = ["name", "number", "cco", "aro", "election", "polling_division"]
+        fields = ["name", "number", "cco", "aro",
+                  "election", "polling_division", "id"]
         
