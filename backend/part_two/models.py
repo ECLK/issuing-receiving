@@ -1,6 +1,6 @@
 from django.db import models
 from units.models import PollingStation
-from staffs.models import IRAROPollingDistricts
+from staffs.models import IRARO
 from election.models import Election
 # Create your models here.
 
@@ -12,7 +12,7 @@ class IssuedToSPO(models.Model):
     spo = models.ForeignKey(
         PollingStation, on_delete=models.SET_NULL, null=True, related_name="issued_to_spo")
     i_r_aro = models.ForeignKey(
-        IRAROPollingDistricts, on_delete=models.SET_NULL, null=True, related_name="issued_to_spo")
+        IRARO, on_delete=models.SET_NULL, null=True, related_name="issued_to_spo")
     election = models.ForeignKey(
         Election, on_delete=models.SET_NULL, null=True, related_name="issued_to_spo")
     entered_time = models.DateTimeField()
@@ -27,7 +27,7 @@ class BallotBoxesIssuedToSPO(models.Model):
     spo = models.ForeignKey(PollingStation,
                             on_delete=models.SET_NULL, null=True, related_name="ballot_box_issued_to_spo")
     i_r_aro = models.ForeignKey(
-        IRAROPollingDistricts, on_delete=models.SET_NULL, null=True, related_name="ballot_box_issued_to_spo")
+        IRARO, on_delete=models.SET_NULL, null=True, related_name="ballot_box_issued_to_spo")
     election = models.ForeignKey(
         Election, on_delete=models.SET_NULL, null=True, related_name="ballot_box_issued_to_spo")
     entered_time = models.DateTimeField()
@@ -45,7 +45,7 @@ class ReceivedFromSPO(models.Model):
     spo = models.ForeignKey(
         PollingStation, on_delete=models.SET_NULL, null=True, related_name="received_from_spo_part_two")
     i_r_aro = models.ForeignKey(
-        IRAROPollingDistricts, on_delete=models.SET_NULL, null=True, related_name="received_from_spo_part_two")
+        IRARO, on_delete=models.SET_NULL, null=True, related_name="received_from_spo_part_two")
     election = models.ForeignKey(
         Election, on_delete=models.SET_NULL, null=True, related_name="received_from_spo_part_two")
     entered_time = models.DateTimeField()
@@ -60,7 +60,7 @@ class BallotBoxesReceived(models.Model):
     spo = models.ForeignKey(PollingStation,
                             on_delete=models.SET_NULL, null=True, related_name="ballot_box_received_from_spo")
     i_r_aro = models.ForeignKey(
-        IRAROPollingDistricts, on_delete=models.SET_NULL, null=True, related_name="ballot_box_received_from_spo")
+        IRARO, on_delete=models.SET_NULL, null=True, related_name="ballot_box_received_from_spo")
     election = models.ForeignKey(
         Election, on_delete=models.SET_NULL, null=True, related_name="ballot_box_received_from_spo")
     entered_time = models.DateTimeField()

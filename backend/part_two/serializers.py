@@ -16,7 +16,7 @@ class ReceivedFromSPOSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ReceivedFromSPO
-        fields = ["issued_time", "no_of_stamps",
+        fields = ["received_time", "no_of_stamps",
                   "no_of_pens", "spo", "i_r_aro", "election", "entered_time"]
 
 class BallotBoxesIssuedSerializer(serializers.ModelSerializer):
