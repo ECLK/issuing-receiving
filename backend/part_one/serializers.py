@@ -8,12 +8,12 @@ class ReportedToWorkElectionDayReadSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ReportedToWorkElectionDay
-        fields = ["id", "time", "staff","i_r_aro"]
+        fields = ["id", "time", "staff","i_r_aro","election"]
 
 class ReportedToWorkElectionDayWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReportedToWorkElectionDay
-        fields = ["id", "time", "staff", "i_r_aro"]
+        fields = ["id", "time", "staff", "i_r_aro", "election"]
 
 class ReportedToWorkBeforeReadSerializer(serializers.ModelSerializer):
     staff = StaffsSerializer(read_only=True)
@@ -25,4 +25,4 @@ class ReportedToWorkBeforeReadSerializer(serializers.ModelSerializer):
 class ReportedToWorkBeforeWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReportedToWorkBeforeElection
-        fields=["id","time","staffs","i_r_aro"]
+        fields=["id","time","staff","i_r_aro"]
