@@ -1,6 +1,6 @@
 from django.db import models
 from units.models import CountingCentre
-from staffs.models import IRAROPollingDistricts
+from staffs.models import IRARO
 from election.models import Election
 
 # Create your models here.
@@ -11,7 +11,7 @@ class IssuedToCCO(models.Model):
     cco = models.ForeignKey(CountingCentre,
                             on_delete=models.SET_NULL, null=True, related_name="issued_to_cco")
     i_r_aro = models.ForeignKey(
-        IRAROPollingDistricts, on_delete=models.SET_NULL, null=True, related_name="issued_to_cco")
+        IRARO, on_delete=models.SET_NULL, null=True, related_name="issued_to_cco")
     v = models.IntegerField()
     l = models.IntegerField()
     g = models.IntegerField()
