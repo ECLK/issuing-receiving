@@ -11,40 +11,71 @@ from part_two.serializers import (
     BallotBoxesIssuedSerializer,
     BallotBoxesReceivedSerializer
 )
+from utils.permissions import IsOwnerVerify
+from rest_framework.permissions import BasePermission
+from utils.mixins import AddElectionAROMixin
+
+
+message = "You don't have permission to access this"
+
+
+class IsOwnerIssuedToSPO(BasePermission):
+    message = message
+
+    def has_permission(self, request, view):
+        is_owner = IsOwnerVerify(IssuedToSPO)
+        return is_owner.verify(request, view)
+
+class IsOwnerReceivedFromSPO(BasePermission):
+    message = message
+
+    def has_permission(self, request, view):
+        is_owner = IsOwnerVerify(ReceivedFromSPO)
+        return is_owner.verify(request, view)
+
+class IsOwnerBallotBoxesIssued(BasePermission):
+    message = message
+
+    def has_permission(self, request, view):
+        is_owner = IsOwnerVerify(BallotBoxesIssuedToSPO)
+        return is_owner.verify(request, view)
+
+
+class IsOwnerBallotBoxesReceived(BasePermission):
+    message = message
+
+    def has_permission(self, request, view):
+        is_owner = IsOwnerVerify(BallotBoxesReceived)
+        return is_owner.verify(request, view)
+        
 
 # Create your views here.
 
-class IssuedToSpoViewSets(viewsets.ModelViewSet):
+class IssuedToSpoViewSets(AddElectionAROMixin, viewsets.ModelViewSet):
     queryset = IssuedToSPO.objects.all()
     serializer_class = IssuedToSPOSerializer
+    permission_classes=[IsOwnerIssuedToSPO]
 
-    def get_queryset(self):
-        election = self.kwargs['election']
-        return IssuedToSPO.objects.filter(election__id=election)
 
-class ReceivedFromSPOViewSets(viewsets.ModelViewSet):
+
+class ReceivedFromSPOViewSets(AddElectionAROMixin, viewsets.ModelViewSet):
     queryset = ReceivedFromSPO.objects.all()
     serializer_class = ReceivedFromSPOSerializer
-
-    def get_queryset(self):
-        election = self.kwargs['election']
-        return ReceivedFromSPO.objects.filter(election__id=election)
+    permission_classes=[IsOwnerReceivedFromSPO]
 
 
-class BallotBoxesIssuedToSPOViewSets(viewsets.ModelViewSet):
+
+class BallotBoxesIssuedToSPOViewSets(AddElectionAROMixin, viewsets.ModelViewSet):
     queryset = BallotBoxesIssuedToSPO.objects.all()
     serializer_class = BallotBoxesIssuedSerializer
+    permission_classes=[IsOwnerBallotBoxesIssued]
 
-    def get_queryset(self):
-        election = self.kwargs['election']
-        return BallotBoxesIssuedToSPO.objects.filter(election__id=election)
 
-class BallotBoxesReceivedViewSets(viewsets.ModelViewSet):
+
+class BallotBoxesReceivedViewSets(AddElectionAROMixin, viewsets.ModelViewSet):
     queryset = BallotBoxesReceived.objects.all()
     serializer_class = BallotBoxesReceivedSerializer
+    permission_classes=[IsOwnerReceivedFromSPO]
 
-    def get_queryset(self):
-        election = self.kwargs['election']
-        return BallotBoxesReceived.objects.filter(election__id=election)
 
 
