@@ -1,22 +1,38 @@
 from part_four.models import IssuedToCCO, BallotBoxesIssuedToCCO
 from part_four.serializers import IssuedToCCOSerializer, BallotBoxesIssuedToCCOSerializer
 from rest_framework import viewsets
+from utils.permissions import IsOwnerVerify
+from utils.mixins import AddElectionAROMixin
+from rest_framework.permissions import BasePermission
+
 # Create your views here.
 
 
-class IssuedToCCOViewSet(viewsets.ModelViewSet):
+class IsOwner(BasePermission):
+    message = "You don't have permission to access this"
+
+    def has_permission(self, request, view):
+        is_owner = IsOwnerVerify(IssuedToCCO)
+        return is_owner.verify(request, view)
+
+
+class IsOwnerBallotBoxes(BasePermission):
+    message = "You don't have permission to access this"
+
+    def has_permission(self, request, view):
+        is_owner = IsOwnerVerify(BallotBoxesIssuedToCCO)
+        return is_owner.verify(request, view)
+
+
+class IssuedToCCOViewSet(AddElectionAROMixin, viewsets.ModelViewSet):
     queryset = IssuedToCCO.objects.all()
     serializer_class = IssuedToCCOSerializer
-
-    def get_queryset(self):
-        election = self.kwargs['election']
-        return IssuedToCCO.objects.filter(election__id=election)
+    permission_classes=[IsOwner]
 
 
-class BallotBoxesIssuedToCCOViewSet(viewsets.ModelViewSet):
+
+class BallotBoxesIssuedToCCOViewSet(AddElectionAROMixin, viewsets.ModelViewSet):
     queryset = BallotBoxesIssuedToCCO.objects.all()
     serializer_class = BallotBoxesIssuedToCCOSerializer
+    permission_classes=[IsOwnerBallotBoxes]
 
-    def get_queryset(self):
-        election = self.kwargs["election"]
-        return BallotBoxesIssuedToCCO.objects.filter(election__id=election)
