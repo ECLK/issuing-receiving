@@ -173,6 +173,61 @@ class ChangePassword(views.APIView):
             return Response(e, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+class ChangePasswordAdmin(views.APIView):
+    @swagger_auto_schema(request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'password': openapi.Schema(type=openapi.TYPE_STRING, description='string'),
+        }))
+    def put(self, request, id):
+        """
+            This allows an admin to change a user's password.
+        """
+        try:
+            if not request.user.is_staff and not request.user.is_superuser:
+                return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+            try:
+                request.data["password"]
+            except KeyError:
+                return Response("The data format is incorrect", status.HTTP_400_BAD_REQUEST)
+
+            user = User.objects.get(pk=id)
+            if user is None:
+                return Response("A user with the provided ID is not found", status=status.HTTP_400_BAD_REQUEST)
+
+            user.set_password(request.data["password"])
+            user.save()
+            return Response(status=status.HTTP_200_OK)
+        except:
+            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class ChangePassword(views.APIView):
+    @swagger_auto_schema(request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'current_password': openapi.Schema(type=openapi.TYPE_STRING, description='string'),
+            'password': openapi.Schema(type=openapi.TYPE_STRING, description='string'),
+        }))
+    def put(self, request):
+        """
+            This allows a user to change their password.
+        """
+        try:
+            user = request.user
+            if user.check_password(request.data["current_password"]):
+                user.set_password(request.data["password"])
+                user.save()
+                return Response(status=status.HTTP_200_OK)
+            else:
+                return Response("Current password is incorrect", status=status.HTTP_400_BAD_REQUEST)
+        except KeyError:
+            return Response("The data format is incorrect", status=status.HTTP_400_BAD_REQUEST)
+        except:
+            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
 class IRAROPollingDistrictsViewSet(viewsets.ModelViewSet):
     queryset = IRAROPollingDistricts.objects.all()
     serializer_class = IRAROPollingDistrictsSerializer
