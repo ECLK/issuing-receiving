@@ -11,38 +11,63 @@ from part_five.serializers import (
     Cover6Serializer,
     IssuedToPDSerializer
 )
+from utils.permissions import IsOwnerVerify, IsOwnerCoverVerify
+from utils.mixins import AddElectionAROMixin, AddElectionAROCoverMixin
+from rest_framework.permissions import BasePermission
 # Create your views here.
 
-class IssuedToAROCCViewSet(viewsets.ModelViewSet):
+message = "You don't have permission to access this"
+class IsOwnerARO(BasePermission):
+    message = message
+    
+    def has_permission(self, request, view):
+        is_owner = IsOwnerVerify(IssuedToAROCC)
+        return is_owner.verify(request, view)
+
+
+class IsOwnerCover5(BasePermission):
+    message = message
+
+    def has_permission(self, request, view):
+        is_owner = IsOwnerCoverVerify(Cover5)
+        return is_owner.verify(request, view)
+
+
+class IsOwnerCover6(BasePermission):
+    message = message
+
+    def has_permission(self, request, view):
+        is_owner = IsOwnerCoverVerify(Cover6)
+        return is_owner.verify(request, view)
+
+
+class IsOwnerPD(BasePermission):
+    message = message
+
+    def has_permission(self, request, view):
+        is_owner = IsOwnerVerify(IssuedToPD)
+        return is_owner.verify(request, view)
+
+class IssuedToAROCCViewSet(AddElectionAROMixin, viewsets.ModelViewSet):
     queryset = IssuedToAROCC.objects.all()
     serializer_class = IssuedToAROCCSerializer
-    
-    def get_queryset(self):
-        election = self.kwargs["election"]
-        return IssuedToAROCC.objects.filter(election__id=election)
+    permission_classes=[IsOwnerARO]
 
 
-class Cover5ViewSet(viewsets.ModelViewSet):
+class Cover5ViewSet(AddElectionAROCoverMixin, viewsets.ModelViewSet):
     queryset = Cover5.objects.all()
     serializer_class = Cover5Serializer
+    permission_classes=[IsOwnerCover5]
     
-    def get_queryset(self):
-        election = self.kwargs["election"]
-        return Cover5.objects.filter(election__id=election)
 
-class Cover6ViewSet(viewsets.ModelViewSet):
+class Cover6ViewSet(AddElectionAROCoverMixin, viewsets.ModelViewSet):
     queryset = Cover6.objects.all()
     serializer_class = Cover6Serializer
-    
-    def get_queryset(self):
-        election = self.kwargs["election"]
-        return Cover6.objects.filter(election__id=election)
+    permission_classes=[IsOwnerCover6]
 
 
-class IssuedToPDViewSet(viewsets.ModelViewSet):
+class IssuedToPDViewSet(AddElectionAROMixin, viewsets.ModelViewSet):
     queryset = IssuedToPD.objects.all()
     serializer_class = IssuedToPDSerializer
-    
-    def get_queryset(self):
-        election = self.kwargs["election"]
-        return IssuedToPD.objects.filter(election__id=election)
+    permission_classes=[IsOwnerPD]
+
