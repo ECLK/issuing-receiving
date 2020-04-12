@@ -8,53 +8,36 @@ from part_one.serializers import (
     ReportedToWorkBeforeReadSerializer,
     ReportedToWorkBeforeWriteSerializer
 )
+from utils.permissions import IsOwnerVerify
+from utils.mixins import AddElectionAROMixin
 
 # Create your views here.
 
-class IsOwner(BasePermission):
+
+class IsOwnerBefore(BasePermission):
     message = "You don't have permission to access this"
 
     def has_permission(self, request, view):
-        user = request.user
-        if user.is_authenticated:
-            aro = user.aro
-            id = view.kwargs.get("pk")
-            if id is None:
-                return True
-            return ReportedToWorkElectionDay.objects.get(pk=id).i_r_aro == aro
-        return False
+        is_owner = IsOwnerVerify(ReportedToWorkBeforeElection)
+        return is_owner.verify(request, view)
 
-class ReportedToWorkElectionDayViewSet(viewsets.ModelViewSet):
+
+class IsOwnerOn(BasePermission):
+    message = "You don't have permission to access this"
+
+    def has_permission(self, request, view):
+        is_owner = IsOwnerVerify(ReportedToWorkElectionDay)
+        return is_owner.verify(request, view)
+
+
+class ReportedToWorkElectionDayViewSet(AddElectionAROMixin, viewsets.ModelViewSet):
     queryset = ReportedToWorkElectionDay.objects.all()
     serializer_class = ReportedToWorkElectionDayWriteSerializer
     serializer_action_classes = {
         'list': ReportedToWorkElectionDayReadSerializer,
         'retrieve': ReportedToWorkElectionDayReadSerializer
     }
-    permission_classes=[IsOwner]
-
-    def get_queryset(self):
-        user = self.request.user
-        aro = user.aro
-        return ReportedToWorkElectionDay.objects.filter(i_r_aro=aro)
-
-    def create(self, request):
-        try:
-            user = self.request.user
-            if user.is_authenticated:
-                aro = user.aro
-                election = aro.election
-                data = request.data.copy()
-                data["election"] = election.id
-                data["i_r_aro"] = aro.id
-                report_to_work_serializer = self.get_serializer_class()(data = data)
-                if (report_to_work_serializer.is_valid()):
-                    report_to_work_serializer.save()
-                    return Response(report_to_work_serializer.data, status=status.HTTP_201_CREATED)
-                return Response(status=status.HTTP_400_BAD_REQUEST)
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
-        except:
-            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    permission_classes = [IsOwnerOn]
 
     def get_serializer_class(self):
         try:
@@ -63,17 +46,14 @@ class ReportedToWorkElectionDayViewSet(viewsets.ModelViewSet):
             return super().get_serializer_class()
 
 
-class ReportedToWorkBeforeElectionViewSet(viewsets.ModelViewSet):
+class ReportedToWorkBeforeElectionViewSet(AddElectionAROMixin, viewsets.ModelViewSet):
     queryset = ReportedToWorkBeforeElection.objects.all()
-    serializer_class = ReportedToWorkElectionDayWriteSerializer
+    serializer_class = ReportedToWorkBeforeWriteSerializer
     serializer_action_classes = {
-        'list': ReportedToWorkBeforeWriteSerializer,
+        'list': ReportedToWorkBeforeReadSerializer,
         'retrieve': ReportedToWorkBeforeReadSerializer
     }
-
-    def get_queryset(self):
-        election = self.kwargs['election']
-        return ReportedToWorkElectionDay.objects.filter(election__id=election)
+    permission_classes = (IsOwnerBefore,)
 
     def get_serializer_class(self):
         try:
