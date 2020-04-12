@@ -1,10 +1,11 @@
 from rest_framework import serializers
 from part_three.models import ReceivedFromSPO
 
-class ReceivedFromSPOSerializer(serializers.ModelSerializer):
+class ReceivedFromSPOThreeSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReceivedFromSPO
         fields = [
+            "id",
             "received_time",
             "a",
             "b",
