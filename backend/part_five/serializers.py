@@ -36,17 +36,18 @@ class IssuedToAROCCSerializer(serializers.ModelSerializer):
 class Cover5Serializer(serializers.ModelSerializer):
     class Meta:
         model = Cover5
-        fields = ["issued_to_aro_cc", "polling_district"]
+        fields = ["id", "issued_to_aro_cc", "polling_district"]
 
 class Cover6Serializer(serializers.ModelSerializer):
     class Meta:
         model = Cover6
-        fields = ["issued_to_aro_cc", "polling_district"]
+        fields = ["id", "issued_to_aro_cc", "polling_district"]
 
 class IssuedToPDSerializer(serializers.ModelSerializer):
     class Meta:
         model = IssuedToPD
         fields = [
+            "id",
             "issued_time",
             "i_r_aro",
             "in_charge",
