@@ -8,7 +8,7 @@ from units.models import PollingDistrict
 
 class IssuedToAROCC(models.Model):
     issued_time = models.DateTimeField()
-    i_r_aro = models.ForeignKey(
+    i_r_aro = models.OneToOneField(
         IRARO, on_delete=models.SET_NULL, null=True, related_name="issued_to_aro_cc")
     aro_cc = models.ForeignKey(
         CountingCentre, on_delete=models.SET_NULL, null=True, related_name="issued_to_aro_cc")
@@ -36,7 +36,7 @@ class IssuedToAROCC(models.Model):
 
 
 class Cover5(models.Model):
-    issued_to_aro_cc = models.ForeignKey(
+    issued_to_aro_cc = models.OneToOneField(
         IssuedToAROCC, on_delete=models.CASCADE,related_name="cover5")
     polling_district = models.ForeignKey(
         PollingDistrict, on_delete=models.SET_NULL, null=True, related_name="cover5")
@@ -47,7 +47,7 @@ class Cover5(models.Model):
 
 
 class Cover6(models.Model):
-    issued_to_aro_cc = models.ForeignKey(
+    issued_to_aro_cc = models.OneToOneField(
         IssuedToAROCC, on_delete=models.CASCADE, related_name="cover6")
     polling_district = models.ForeignKey(
         PollingDistrict, on_delete=models.SET_NULL, null=True, related_name="cover6")
