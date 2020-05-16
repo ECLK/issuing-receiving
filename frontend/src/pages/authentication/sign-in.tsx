@@ -5,15 +5,17 @@ import { AuthContext } from "../../helpers";
 import MuiAlert from "@material-ui/lab/Alert";
 import { useHistory } from "react-router-dom";
 import { signIn, getCallbackUrl } from "../../utils";
+import { authenticate, getStaffDetails } from "../../apis";
+import { ADD_DETAILS } from "../../constants";
 
 export const SignIn = (): React.ReactElement => {
 	const classes = useStyles();
 	const { authState, dispatch } = useContext(AuthContext);
 
-	const [userName, setUserName] = useState("");
-	const [password, setPassword] = useState("");
-	const [error, setError] = useState("");
-	const [showError, setShowError] = useState(false);
+	const [ userName, setUserName ] = useState("");
+	const [ password, setPassword ] = useState("");
+	const [ error, setError ] = useState("");
+	const [ showError, setShowError ] = useState(false);
 
 	const history = useHistory();
 
@@ -24,73 +26,90 @@ export const SignIn = (): React.ReactElement => {
 
 	useEffect(() => {
 		if (authState.authenticated) {
-			history?.push(getCallbackUrl()??"");
+			getStaffDetails().then(response => {
+				dispatch({ type: ADD_DETAILS, payload: response })
+			}).catch(error => {
+				//TODO: Notify error
+			})
 		}
-	}, [authState.authenticated, history]);
+	}, [ authState.authenticated ]);
+
+	useEffect(() => {
+		if (authState.authenticated) {
+			if (authState.isAdmin === 2) {
+				history ?.push(getCallbackUrl() ?? "");
+			}
+		}
+	}, [ authState.isAdmin, history ]);
 
 	return (
-		<>
-			<Snackbar open={showError} autoHideDuration={6000} onClose={onCloseError}>
-				<MuiAlert onClose={onCloseError} severity="error">
-					{error}
-				</MuiAlert>
-			</Snackbar>
-			<Grid container direction="row" justify="center" alignItems="center" className={classes.signInGrid}>
-				<Grid item sm={4}>
-					<Paper square className={classes.signInPaper}>
-						<Grid container direction="column" spacing={3} alignItems="center">
-							<Grid item sm={12}>
-								<Typography variant="h5">Sign In</Typography>
-							</Grid>
-							<Grid item sm={12}>
-								<TextField
-									onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-										setUserName(e.target.value);
-									}}
-									id="username"
-									required
-									label="Username"
-									variant="outlined"
-								/>
-							</Grid>
-							<Grid item>
-								<TextField
-									onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-										setPassword(e.target.value);
-									}}
-									id="password"
-									required
-									label="Password"
-									type="password"
-									variant="outlined"
-								/>
-							</Grid>
-							<Grid item>
-								<Button
-									onClick={() => {
-										if (userName && password) {
-											if (userName === "admin" && password === "admin") {
-												signIn(dispatch, "mock");
+		!authState.authenticated
+		? (
+			<>
+				<Snackbar open={ showError } autoHideDuration={ 6000 } onClose={ onCloseError }>
+					<MuiAlert onClose={ onCloseError } severity="error">
+						{ error }
+					</MuiAlert>
+				</Snackbar>
+				<Grid container direction="row" justify="center" alignItems="center" className={ classes.signInGrid }>
+					<Grid item sm={ 4 }>
+						<Paper square className={ classes.signInPaper }>
+							<Grid container direction="column" spacing={ 3 } alignItems="center">
+								<Grid item sm={ 12 }>
+									<Typography variant="h5">Sign In</Typography>
+								</Grid>
+								<Grid item sm={ 12 }>
+									<TextField
+										onChange={ (e: React.ChangeEvent<HTMLInputElement>) => {
+											setUserName(e.target.value);
+										} }
+										id="username"
+										required
+										label="Username"
+										variant="outlined"
+									/>
+								</Grid>
+								<Grid item>
+									<TextField
+										onChange={ (e: React.ChangeEvent<HTMLInputElement>) => {
+											setPassword(e.target.value);
+										} }
+										id="password"
+										required
+										label="Password"
+										type="password"
+										variant="outlined"
+									/>
+								</Grid>
+								<Grid item>
+									<Button
+										onClick={ () => {
+											if (userName && password) {
+												authenticate(userName, password).then(response => {
+													signIn(dispatch, response.token);
+												}).catch(error => {
+													console.log(error);
+													setError("Username or password is incorrect.");
+													setShowError(true);
+												});
 											} else {
-												setError("Username or password is incorrect.");
+												setError("Username and password cannot be empty.");
 												setShowError(true);
 											}
-										} else {
-											setError("Username and password cannot be empty.");
-											setShowError(true);
-										}
-									}}
-									variant="contained"
-									color="primary"
-									fullWidth
-								>
-									Sign In
+										} }
+										variant="contained"
+										color="primary"
+										fullWidth
+									>
+										Sign In
 								</Button>
+								</Grid>
 							</Grid>
-						</Grid>
-					</Paper>
+						</Paper>
+					</Grid>
 				</Grid>
-			</Grid>
-		</>
+			</>
+			)
+			:<></>
 	);
 };

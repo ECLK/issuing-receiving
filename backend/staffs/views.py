@@ -114,8 +114,8 @@ class IRAROViewSet(viewsets.ModelViewSet):
             }
 
             return Response(my_details, status=status.HTTP_200_OK)
-        except:
-            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except Exception as e:
+            return Response(e,status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class ChangePasswordAdmin(views.APIView):
@@ -144,8 +144,8 @@ class ChangePasswordAdmin(views.APIView):
             user.set_password(request.data["password"])
             user.save()
             return Response(status=status.HTTP_200_OK)
-        except:
-            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except Exception as e :
+            return Response(e, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class ChangePassword(views.APIView):
@@ -169,8 +169,8 @@ class ChangePassword(views.APIView):
                 return Response("Current password is incorrect", status=status.HTTP_400_BAD_REQUEST)
         except KeyError:
             return Response("The data format is incorrect", status=status.HTTP_400_BAD_REQUEST)
-        except:
-            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except Exception as e:
+            return Response(e, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class IRAROPollingDistrictsViewSet(viewsets.ModelViewSet):
