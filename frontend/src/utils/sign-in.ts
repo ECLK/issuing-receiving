@@ -6,8 +6,8 @@ export const signIn = (dispatch: React.Dispatch<AuthAction>, accessToken: string
 	dispatch({ type: SIGN_IN, payload: accessToken });
 };
 
-export const getAccessToken = ():string | null => {
-	return localStorage.getItem(ACCESS_TOKEN);
+export const getAccessToken = ():string => {
+	return localStorage.getItem(ACCESS_TOKEN) ?? "";
 };
 
 export const updateCallbackUrl = (url: string) => {

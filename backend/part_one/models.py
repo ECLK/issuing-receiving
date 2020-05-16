@@ -5,23 +5,26 @@ from staffs.models import Staffs, IRARO
 
 
 class ReportedToWorkElectionDay(models.Model):
-    time = models.TimeField()
+    time = models.DateTimeField()
     election = models.ForeignKey(
         Election, on_delete=models.CASCADE)
     staff = models.ForeignKey(Staffs, on_delete=models.CASCADE)
+    type = models.CharField(max_length=255)
     i_r_aro = models.ForeignKey(
         IRARO, on_delete=models.CASCADE, related_name="reported_to_work_aro_election")
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=["election", "staff"],name="p1_election_election_staff")
+            models.UniqueConstraint(
+                fields=["election", "staff"], name="p1_election_election_staff")
         ]
 
 
 class ReportedToWorkBeforeElection(models.Model):
-    time = models.TimeField()
+    time = models.DateTimeField()
     election = models.ForeignKey(
         Election, on_delete=models.SET_NULL, null=True)
+    type = models.CharField(max_length=255)
     staff = models.ForeignKey(Staffs, on_delete=models.CASCADE)
     i_r_aro = models.ForeignKey(
         IRARO, on_delete=models.CASCADE, related_name="reported_to_work_aro_before")
