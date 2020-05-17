@@ -5,13 +5,22 @@ import { Add } from "@material-ui/icons";
 import { ListPageItem } from "./list-page-item";
 import useStyles from "../../theme";
 
-interface Dialog {
-    dialogTitle: string;
-    dialogContent: React.ReactNode;
-    primaryActionText: string;
-    primaryAction: () => void;
-    secondaryAction?: () => void;
-    secondaryActionText?: string;
+interface AddDialog {
+    addDialogTitle: string;
+    addDialogContent: () => React.ReactNode;
+    addPrimaryActionText: string;
+    addPrimaryAction: () => void;
+    addSecondaryAction?: () => void;
+    addSecondaryActionText?: string;
+}
+
+interface EditDialog {
+    editDialogTitle: string;
+    editDialogContent: () => React.ReactNode;
+    editPrimaryActionText: string;
+    editPrimaryAction: () => void;
+    editSecondaryAction?: () => void;
+    editSecondaryActionText?: string;
 }
 
 export interface Column {
@@ -19,9 +28,7 @@ export interface Column {
     secondaryText: string | string[] | (string | string[])[];
 }
 
-interface ListPagePropsInterface<T> {
-    editDialog: Dialog;
-    addDialog: Dialog;
+interface ListPagePropsInterface<T> extends AddDialog, EditDialog {
     columns: Column[];
     list: T[];
     avatar: React.ReactElement;
@@ -30,15 +37,39 @@ interface ListPagePropsInterface<T> {
     toggleOpen: boolean;
     deleteTitle: string;
     deleteContent: string;
+    onDialogClose: () => void;
 }
 export const ListPage = <T extends { [ key: string ]: any }> (props: ListPagePropsInterface<T>): React.ReactElement => {
 
-    const { editDialog, addDialog, columns, list, avatar, onDelete, onEdit, toggleOpen, deleteContent, deleteTitle } = props;
+    const {
+        addDialogContent,
+        addDialogTitle,
+        addPrimaryAction,
+        addPrimaryActionText,
+        addSecondaryAction,
+        addSecondaryActionText,
+        editDialogContent,
+        editDialogTitle,
+        editPrimaryAction,
+        editPrimaryActionText,
+        editSecondaryAction,
+        editSecondaryActionText,
+        columns,
+        list,
+        avatar,
+        onDelete,
+        onEdit,
+        toggleOpen,
+        deleteContent,
+        deleteTitle,
+        onDialogClose
+    } = props;
 
     const [ openDialog, setOpenDialog ] = useState(false);
     const [ deleteConfirmation, setDeleteConfirmation ] = useState(false);
     const [ deleteIndex, setDeleteIndex ] = useState(-1);
-    const [ selectedDialog, setSelectedDialog ] = useState<Dialog>(addDialog);
+    // edit: false add: true
+    const [ selectedDialog, setSelectedDialog ] = useState<boolean>(true);
 
     const initRender = useRef(true);
 
@@ -54,7 +85,7 @@ export const ListPage = <T extends { [ key: string ]: any }> (props: ListPagePro
 
     useEffect(() => {
         if (!openDialog) {
-            setSelectedDialog(addDialog);
+            setSelectedDialog(true);
         }
     }, [ openDialog ]);
 
@@ -76,7 +107,10 @@ export const ListPage = <T extends { [ key: string ]: any }> (props: ListPagePro
                     <Button onClick={ closeDeleteDialog }>
                         Cancel
                     </Button>
-                    <Button color="primary" onClick={ () => { onDelete(deleteIndex) } }>
+                    <Button color="primary" onClick={ () => {
+                        onDelete(deleteIndex);
+                        setDeleteConfirmation(false);
+                    } }>
                         Delete
                     </Button>
                 </DialogActions>
@@ -94,13 +128,16 @@ export const ListPage = <T extends { [ key: string ]: any }> (props: ListPagePro
                 openDialog &&
                 <AddEditDialog
                     open={ openDialog }
-                    onClose={ () => setOpenDialog(false) }
-                    title={ selectedDialog.dialogTitle }
-                    content={ selectedDialog.dialogContent }
-                    primaryAction={ selectedDialog.primaryAction }
-                    secondaryAction={ selectedDialog.secondaryAction }
-                    primaryActionText={ selectedDialog.primaryActionText }
-                    secondaryActionText={ selectedDialog.secondaryActionText }
+                    onClose={ () => {
+                        setOpenDialog(false);
+                        onDialogClose();
+                    } }
+                    title={ selectedDialog ? addDialogTitle : editDialogTitle }
+                    content={ selectedDialog ? addDialogContent : editDialogContent }
+                    primaryAction={ selectedDialog ? addPrimaryAction : editPrimaryAction }
+                    secondaryAction={ selectedDialog ? addSecondaryAction : editSecondaryAction }
+                    primaryActionText={ selectedDialog ? addPrimaryActionText : editPrimaryActionText }
+                    secondaryActionText={ selectedDialog ? addSecondaryActionText : editSecondaryActionText }
                 />
             }
             <List>
@@ -113,8 +150,7 @@ export const ListPage = <T extends { [ key: string ]: any }> (props: ListPagePro
                                     item={ item }
                                     columns={ columns }
                                     onEdit={ () => {
-                                        setSelectedDialog(editDialog)
-                                        setOpenDialog(true);
+                                        setSelectedDialog(false);
                                         onEdit(index);
                                     } }
                                     onDelete={ () => {
