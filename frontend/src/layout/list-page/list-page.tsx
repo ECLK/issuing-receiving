@@ -81,6 +81,7 @@ export const ListPage = <T extends { [ key: string ]: any }> (props: ListPagePro
         } else {
             setOpenDialog(!openDialog);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ toggleOpen ]);
 
     useEffect(() => {

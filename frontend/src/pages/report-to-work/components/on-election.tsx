@@ -26,9 +26,10 @@ export const OnElection = (): React.ReactElement => {
             //TODO: Notify error
         });
     }
-
+    
     useEffect(() => {
         editData && setToggleDialog(!toggleDialog);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ editData ])
 
     return (

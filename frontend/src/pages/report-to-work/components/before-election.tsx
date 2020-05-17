@@ -29,6 +29,7 @@ export const BeforeElection = (): React.ReactElement => {
 
     useEffect(() => {
         editData && setToggleDialog(!toggleDialog);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ editData ])
 
     return (

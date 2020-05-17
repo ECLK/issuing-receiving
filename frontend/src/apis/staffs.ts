@@ -5,7 +5,7 @@ import { errorStatus } from "../utils";
 import { Staff } from "../models";
 
 export const listStaffs = (): Promise<any> => {
-    const config = {
+    const config:AxiosRequestConfig = {
         url: apiEndpoints.staffs.staffs,
         method: Methods.GET
     };
@@ -23,7 +23,7 @@ export const listStaffs = (): Promise<any> => {
 
 
 export const createStaff = (data: Staff): Promise<any> => {
-    const config = {
+    const config:AxiosRequestConfig = {
         url: apiEndpoints.staffs.staffs,
         method: Methods.POST,
         data

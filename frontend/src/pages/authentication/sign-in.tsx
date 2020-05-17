@@ -32,6 +32,7 @@ export const SignIn = (): React.ReactElement => {
 				//TODO: Notify error
 			})
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [ authState.authenticated ]);
 
 	useEffect(() => {
@@ -40,6 +41,7 @@ export const SignIn = (): React.ReactElement => {
 				history ?.push(getCallbackUrl() ?? "");
 			}
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [ authState.isAdmin, history ]);
 
 	return (
