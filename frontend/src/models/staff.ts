@@ -10,7 +10,7 @@ import {
 export interface Staff{
     name: string;
     nic: string;
-    id: number;
+    id?: number;
     address: string;
 }
 
