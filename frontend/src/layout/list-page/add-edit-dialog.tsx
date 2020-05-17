@@ -11,7 +11,7 @@ interface AddReportToWorkPropInterface {
      */
     onClose: () => void;
     title: string;
-    content: React.ReactNode;
+    content: () => React.ReactNode;
     primaryActionText: string;
     secondaryActionText?: string;
     primaryAction: () => void;
@@ -27,7 +27,7 @@ export const AddEditDialog = (props: AddReportToWorkPropInterface): React.ReactE
                 { title }
             </DialogTitle>
             <DialogContent>
-                { content }
+                { content() }
             </DialogContent>
             <DialogActions>
                 { (secondaryAction && secondaryActionText) &&
