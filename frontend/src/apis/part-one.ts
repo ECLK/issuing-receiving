@@ -2,7 +2,7 @@ import { http, Methods } from "../configs";
 import { apiEndpoints } from "../constants";
 import { AxiosRequestConfig } from "axios";
 import { errorStatus } from "../utils";
-import { ReportToWork, Staff } from "../models";
+import { ReportToWork } from "../models";
 
 export const listBeforeElections = (): Promise<any> => {
     const config: AxiosRequestConfig = {
