@@ -47,7 +47,10 @@ export const ListPageItem = <T extends { [ key: string ]: any },> (props: ListPa
                 {
                     columns.map((column: Column, index: number) => {
                         return (
-                            <Grid key={ index } item xs={ Math.floor(10 / columns.length) as 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 }>
+                            <Grid key={ index }
+                                item
+                                xs={ Math.floor(10 / columns.length) as 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 }
+                            >
                                 <ListItemText
                                     primary={ accessValue(item, column.primaryText) }
                                     secondary={
